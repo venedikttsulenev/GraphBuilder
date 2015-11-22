@@ -2,12 +2,15 @@ package com.venediktVictoria.tokens;
 
 public class GBFunctionToken extends GBToken {
 	private enum GBFunctionType {
-		exp, sin, cos //, ...
+		exp, ln, sin, cos, tan, ctan //, ...
 	}
 	static final String FUNC_TOKENS[][] = {
 		{"exp", "Exp", "EXP"},
+		{"ln", "Ln", "LN"},
 		{"sin", "Sin", "SIN"},
-		{"cos", "Cos", "COS"}
+		{"cos", "Cos", "COS"},
+		{"tan", "Tan", "TAN", "tg", "Tg", "TG"},
+		{"ctan", "Ctan", "CTAN", "ctg", "Ctg", "CTG"}
 		//...
 	};
 	GBFunctionType functionType_;
@@ -28,10 +31,16 @@ public class GBFunctionToken extends GBToken {
 		switch(functionType_) {
 		case exp:
 			return Math.exp(x);
+		case ln:
+			return Math.log(x);
 		case sin:
 			return Math.sin(x);
 		case cos:
 			return Math.cos(x);
+		case tan:
+			return Math.tan(x);
+		case ctan:
+			return Math.pow(Math.tan(x), -1);
 		//...
 		default:
 			return x;
@@ -41,6 +50,6 @@ public class GBFunctionToken extends GBToken {
 		return FUNC_TOKENS[functionType_.ordinal()][0].length();
 	}
 	public int priority() {
-		return 0;
+		return 1;
 	}
 }

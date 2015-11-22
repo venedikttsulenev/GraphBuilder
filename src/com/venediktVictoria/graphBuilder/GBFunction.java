@@ -43,12 +43,12 @@ public class GBFunction {
 				postfix_.addElement(token);
 				break;
 			case Operator:
-			case Function:
 				//TO DO: check for missing arguments
-				while (!opStack.isEmpty() && (opStack.peek().type() ==  GBTokenType.Operator || opStack.peek().type() == GBTokenType.Function) && token.priority() <= opStack.peek().priority())
+				while (!opStack.empty() && (opStack.peek().type() == GBTokenType.Operator || opStack.peek().type() == GBTokenType.Function) && token.priority() <= opStack.peek().priority())
 					postfix_.addElement(opStack.pop());
 				opStack.push(token);
 				break;
+			case Function:
 			case OpenBracket:
 				opStack.push(token);
 				break;
@@ -66,7 +66,7 @@ public class GBFunction {
 				break;
 			}
 		}
-		while (!opStack.isEmpty()) {
+		while (!opStack.empty()) {
 			token = opStack.pop();
 			if (token.type() == GBTokenType.OpenBracket)
 				throw new GBExtraOpenBracketException();
