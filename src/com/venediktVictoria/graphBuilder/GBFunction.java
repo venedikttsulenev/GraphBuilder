@@ -103,10 +103,4 @@ public class GBFunction {
 		}
 		return calc.pop();
 	}
-	//Just for debug
-	public String postfix() {
-		String p = new String();
-		
-		return p;
-	}
 }

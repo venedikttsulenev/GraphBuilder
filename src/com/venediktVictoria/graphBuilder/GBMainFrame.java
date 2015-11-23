@@ -1,6 +1,5 @@
 package com.venediktVictoria.graphBuilder;
 
-//import java.awt.event.ActionEvent;
 import java.awt.event.*;
 
 import javax.swing.JFrame;
@@ -78,9 +77,5 @@ public class GBMainFrame extends JFrame {
 			@Override
 			public void componentHidden(ComponentEvent e) {}
 		});
-	}
-	public static void main(String args[]) {
-		final String VERSION = "0.0";
-		GBMainFrame mainFrame = new GBMainFrame(800, 600, "Graph Builder " + VERSION);
 	}
 }
