@@ -1,4 +1,4 @@
-package com.venediktVictoria.tokens;
+package com.venediktVictoria.graphBuilder.tokens;
 
 public class GBFunctionToken extends GBToken {
 	private enum GBFunctionType {

@@ -1,4 +1,4 @@
-package com.venediktVictoria.tokens;
+package com.venediktVictoria.graphBuilder.tokens;
 
 public class GBOpenBracketToken extends GBToken {
 	public GBOpenBracketToken(String s, int pos) {

@@ -1,4 +1,6 @@
-package com.venediktVictoria.tokens;
+package com.venediktVictoria.graphBuilder.tokens;
+
+import com.venediktVictoria.graphBuilder.exceptions.GBIncorrectNumericException;
 
 public class GBNumericToken extends GBToken {
 	static final String CONST_TOKENS[][] = {
@@ -16,7 +18,7 @@ public class GBNumericToken extends GBToken {
 	private static boolean isNumeric(char c) {
 		return (c >= '0' && c <= '9') || c == '.';
 	}
-	public GBNumericToken(String s, int pos) {
+	public GBNumericToken(String s, int pos) throws GBIncorrectNumericException {
 		type_ = GBTokenType.Undefined;
 		for (int i = 0; i < CONST_TOKENS.length && type_ == GBTokenType.Undefined; ++i)
 			for (int j = 0; j < CONST_TOKENS[i].length && type_ == GBTokenType.Undefined; ++j) 
@@ -34,8 +36,9 @@ public class GBNumericToken extends GBToken {
 				type_ = GBTokenType.Numeric;
 				length_ = len;
 			}
-			catch(NullPointerException e) {}
-			catch(NumberFormatException e) {}
+			catch (NumberFormatException e) {
+				throw new GBIncorrectNumericException(pos);
+			}
 		}
 	}
 	public GBNumericToken(double v) {

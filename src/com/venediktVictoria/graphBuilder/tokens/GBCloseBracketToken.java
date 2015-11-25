@@ -1,4 +1,4 @@
-package com.venediktVictoria.tokens;
+package com.venediktVictoria.graphBuilder.tokens;
 
 public class GBCloseBracketToken extends GBToken {
 	public GBCloseBracketToken(String s, int pos) {

@@ -1,14 +1,16 @@
 package com.venediktVictoria.graphBuilder;
 
 import java.util.*;
-import com.venediktVictoria.tokens.*;
+
+import com.venediktVictoria.graphBuilder.exceptions.*;
+import com.venediktVictoria.graphBuilder.tokens.*;
 
 public class GBFunction {
 	private Vector<GBToken> postfix_;
 	
 //--------------------------------------------------------------------------------
 	
-	public GBFunction(String s) throws GBUnknownTokenException, GBExtraCloseBracketException, GBExtraOpenBracketException {
+	public GBFunction(String s) throws GBUnknownTokenException, GBExtraCloseBracketException, GBExtraOpenBracketException, GBIncorrectNumericException {
 		Vector<GBToken>infix = new Vector<GBToken>(s.length());
 		int pos = 0;
 		GBToken token;

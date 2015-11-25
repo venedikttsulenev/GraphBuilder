@@ -1,4 +1,4 @@
-package com.venediktVictoria.tokens;
+package com.venediktVictoria.graphBuilder.tokens;
 
 abstract public class GBToken {
 	protected GBTokenType type_;

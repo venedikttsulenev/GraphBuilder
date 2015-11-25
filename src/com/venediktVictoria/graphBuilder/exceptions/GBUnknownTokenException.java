@@ -1,4 +1,4 @@
-package com.venediktVictoria.graphBuilder;
+package com.venediktVictoria.graphBuilder.exceptions;
 
 public class GBUnknownTokenException extends Exception {
 	private int pos_;

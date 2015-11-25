@@ -1,4 +1,4 @@
-package com.venediktVictoria.tokens;
+package com.venediktVictoria.graphBuilder.tokens;
 
 public class GBVariableToken extends GBToken {
 	public GBVariableToken(String s, int pos) {
