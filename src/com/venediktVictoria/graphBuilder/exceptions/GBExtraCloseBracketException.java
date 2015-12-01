@@ -1,9 +1,13 @@
 package com.venediktVictoria.graphBuilder.exceptions;
 
-public class GBExtraCloseBracketException extends Exception {
+import com.venediktVictoria.graphBuilder.tokens.GBToken;
+
+public class GBExtraCloseBracketException extends GBParseException {
+	public GBExtraCloseBracketException(GBToken token) {
+		super(token);
+	}
 	@Override
 	public String getMessage() {
-		return "Extra closing bracket in expression";
+		return super.getMessage() + "extra closing bracket in expression";
 	}
 }
-//privetik

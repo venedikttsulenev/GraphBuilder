@@ -2,6 +2,7 @@ package com.venediktVictoria.graphBuilder.tokens;
 
 public class GBOpenBracketToken extends GBToken {
 	public GBOpenBracketToken(String s, int pos) {
+		pos_ = pos;
 		switch (s.charAt(pos)) {
 		case '(':
 		case '[':

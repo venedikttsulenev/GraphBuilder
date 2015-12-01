@@ -10,34 +10,38 @@ public class GBFunction {
 	
 //--------------------------------------------------------------------------------
 	
-	public GBFunction(String s) throws GBUnknownTokenException, GBExtraCloseBracketException, GBExtraOpenBracketException, GBIncorrectNumericException {
+	public GBFunction(String s) throws GBUnknownTokenException, GBExtraCloseBracketException, GBExtraOpenBracketException,
+		GBIncorrectNumericException
+	{
 		Vector<GBToken>infix = new Vector<GBToken>(s.length());
 		int pos = 0;
 		GBToken token;
-		while (pos < s.length()) {
-			while (s.charAt(pos) == ' ' && pos < s.length())
+		while (pos < s.length()) { //Переводим строку в массив токенов
+			while (pos < s.length() && s.charAt(pos) == ' ')
 				++pos;
 			if (pos < s.length()) {
 				token = new GBFunctionToken(s, pos);
 				if (token.type() == GBTokenType.Undefined)
 					token = new GBOperatorToken(s, pos);
 				if (token.type() == GBTokenType.Undefined)
-					token = new GBNumericToken(s, pos);
-				if (token.type() == GBTokenType.Undefined)
 					token = new GBVariableToken(s, pos);
 				if (token.type() == GBTokenType.Undefined)
 					token = new GBOpenBracketToken(s, pos);
 				if (token.type() == GBTokenType.Undefined)
 					token = new GBCloseBracketToken(s, pos);
+				if (token.type() == GBTokenType.Undefined)
+					token = new GBNumericToken(s, pos);
 				if (token.type() == GBTokenType.Undefined) //Unknown token
-					throw new GBUnknownTokenException(pos);
+					throw new GBUnknownTokenException(token);
 				pos += token.length();
 				infix.addElement(token);
 			}
 		}
+		//TODO check for missing arguments
+		//TODO check for missing operators
 		Stack<GBToken> opStack = new Stack<GBToken>();
 		postfix_ = new Vector<GBToken>(infix.size());
-		for (int i = 0; i < infix.size(); ++i) {
+		for (int i = 0; i < infix.size(); ++i) {  //Перевод в обратную польскую нотацию
 			token = infix.elementAt(i);
 			switch (token.type()) {
 			case Numeric:
@@ -45,7 +49,6 @@ public class GBFunction {
 				postfix_.addElement(token);
 				break;
 			case Operator:
-				//TO DO: check for missing arguments
 				while (!opStack.empty() && (opStack.peek().type() == GBTokenType.Operator || opStack.peek().type() == GBTokenType.Function) && token.priority() <= opStack.peek().priority())
 					postfix_.addElement(opStack.pop());
 				opStack.push(token);
@@ -60,7 +63,7 @@ public class GBFunction {
 						postfix_.addElement(opStack.pop());
 				}
 				catch (EmptyStackException e) {
-					throw new GBExtraCloseBracketException();
+					throw new GBExtraCloseBracketException(token);
 				}
 				opStack.pop(); // pop opening bracket out of stack
 				break;
@@ -71,16 +74,17 @@ public class GBFunction {
 		while (!opStack.empty()) {
 			token = opStack.pop();
 			if (token.type() == GBTokenType.OpenBracket)
-				throw new GBExtraOpenBracketException();
+				throw new GBExtraOpenBracketException(token);
 			else
 				postfix_.addElement(token);
 		}
 	}
-	public double value(double x) {
-		//TO DO: add some checks and exceptions
+	public double value(double x) {		//Вычисляет значение функции в точке
+		//TODO: add some checks and exceptions
 		Stack<Double> calc = new Stack<Double>();
+		GBToken token = null;
 		for (int i = 0; i < postfix_.size(); ++i) {
-			GBToken token = postfix_.elementAt(i);
+			token = postfix_.elementAt(i);
 			switch (token.type()) {
 			case Variable:
 				calc.push(Double.valueOf(x));
@@ -104,5 +108,28 @@ public class GBFunction {
 			}
 		}
 		return calc.pop();
-	}
+	}/*
+	public double bisect(double a, double b, double eps) {
+		double va = value(a);
+		double vb = value(b);
+		double d = (a + b) / 2;
+		double vd = value(d);
+		if (va*vb < 0) {
+			while (Math.abs(vd) > eps) {
+				d = (a + b) / 2;
+				vd = value(d);
+				if (va * vd < 0) {
+					b = d;
+					vb = vd;
+				}
+				else {
+					a = d;
+					va = vd;
+				}
+			}
+		}
+		else
+			d = a - 1;
+		return d;
+	}*/
 }

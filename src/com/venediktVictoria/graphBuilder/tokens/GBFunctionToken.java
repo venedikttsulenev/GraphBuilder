@@ -18,6 +18,7 @@ public class GBFunctionToken extends GBToken {
 //-------------------------------------------------------
 	
 	public GBFunctionToken(String s, int pos) {
+		pos_ = pos;
 		type_ = GBTokenType.Undefined;
 		for (int i = 0; i < FUNC_TOKENS.length && type_ == GBTokenType.Undefined; ++i)
 			for (int j = 0; j < FUNC_TOKENS[i].length && type_ == GBTokenType.Undefined; ++j)  {

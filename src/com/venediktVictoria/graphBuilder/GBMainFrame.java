@@ -1,5 +1,6 @@
 package com.venediktVictoria.graphBuilder;
 
+import java.awt.Color;
 import java.awt.event.*;
 
 import javax.swing.JFrame;
@@ -7,8 +8,10 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
+import com.venediktVictoria.graphBuilder.exceptions.GBParseException;
+
 public class GBMainFrame extends JFrame {
-	private GBFunction function_;
+	//private GBFunction function_;
 	private JTextField textField_;
 	private JButton buttonBuild_;
 	private JLabel labelFX_;
@@ -18,6 +21,30 @@ public class GBMainFrame extends JFrame {
 		textField_.setSize(getWidth() - 60, 26);
 		buttonBuild_.setLocation(getWidth() - 60, 46);
 		errLabel_.setSize(getWidth() - 20 - buttonBuild_.getWidth(), 20);
+	}
+	private void buildGraph() {
+		GBFunction func = null;
+		try {
+			if (textField_.getText().length() == 0) //В текстовом поле пусто
+				errLabel_.setText("There is no expression in text field");
+			else {
+				func = new GBFunction(textField_.getText()); //Парсим текстовое поле
+				errLabel_.setText("f(0) = " + String.valueOf(func.value(0)) + "     f(1) = " + String.valueOf(func.value(1))/* + "     f(" + String.valueOf(func.bisect(-1, 1, 0.00000001)) + ") = 0"*/);
+			}
+		}
+		catch (GBParseException exc) {		
+			errLabel_.setText(exc.getMessage()); //Вывод сообщения об ошибке
+			if (!textField_.hasFocus()) 		 //Выделить текстовое поле для исправления ошибки
+				textField_.grabFocus();
+			textField_.setCaretPosition(exc.token().pos()); //Перевести курсор textField_ в место ошибки
+		}
+		if (func != null) { //Функция задана корректно, проблем при чтении не возникло
+			/* Построение графика...
+			 * Чтобы узнать значение функции в точке x, использовать func.value(x) 
+			 * ...
+			 * */
+			
+		}
 	}
 	public GBMainFrame(int width, int height, String title) {
 		setSize(width, height);
@@ -29,6 +56,17 @@ public class GBMainFrame extends JFrame {
 		textField_.setSize(width - 60, 26);
 		textField_.setLocation(50, 10);
 		textField_.setVisible(true);
+		textField_.addKeyListener(new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (e.getKeyChar() == '\n') //Если нажали Enter, рисуем график
+					buildGraph();
+			}
+			@Override
+			public void keyPressed(KeyEvent e) {}
+			@Override
+			public void keyReleased(KeyEvent e) {}
+		});
 		buttonBuild_ = new JButton("Build");
 		buttonBuild_.setSize(50, 20);
 		buttonBuild_.setLocation(width - 60, 46);
@@ -36,13 +74,7 @@ public class GBMainFrame extends JFrame {
 		buttonBuild_.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				try {
-					function_ = new GBFunction(textField_.getText());
-					errLabel_.setText("f(0) = " + String.valueOf(function_.value(0)) + "     f(1) = " + String.valueOf(function_.value(1)));
-				}
-				catch (Exception exc) {
-					errLabel_.setText(exc.getMessage());
-				}
+				buildGraph();
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {}

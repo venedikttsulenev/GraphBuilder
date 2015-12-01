@@ -2,12 +2,12 @@ package com.venediktVictoria.graphBuilder.exceptions;
 
 import com.venediktVictoria.graphBuilder.tokens.GBToken;
 
-public class GBIncorrectNumericException extends GBParseException {
-	public GBIncorrectNumericException(GBToken token) {
+public class GBMissingOperatorException extends GBParseException {
+	public GBMissingOperatorException(GBToken token) {
 		super(token);
 	}
 	@Override
 	public String getMessage() {
-		return super.getMessage() + "incorrect numeric input";
+		return super.getMessage() + "missing operator";
 	}
 }

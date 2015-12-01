@@ -1,8 +1,13 @@
 package com.venediktVictoria.graphBuilder.exceptions;
 
-public class GBExtraOpenBracketException extends Exception {
+import com.venediktVictoria.graphBuilder.tokens.GBToken;
+
+public class GBExtraOpenBracketException extends GBParseException {
+	public GBExtraOpenBracketException(GBToken token) {
+		super(token);
+	}
 	@Override
 	public String getMessage() {
-		return "Extra opening bracket in expression";
+		return super.getMessage() + "extra opening bracket in expression";
 	}
 }

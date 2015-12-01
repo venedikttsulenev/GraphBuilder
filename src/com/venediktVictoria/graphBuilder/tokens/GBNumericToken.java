@@ -19,6 +19,7 @@ public class GBNumericToken extends GBToken {
 		return (c >= '0' && c <= '9') || c == '.';
 	}
 	public GBNumericToken(String s, int pos) throws GBIncorrectNumericException {
+		pos_ = pos;
 		type_ = GBTokenType.Undefined;
 		for (int i = 0; i < CONST_TOKENS.length && type_ == GBTokenType.Undefined; ++i)
 			for (int j = 0; j < CONST_TOKENS[i].length && type_ == GBTokenType.Undefined; ++j) 
@@ -27,17 +28,17 @@ public class GBNumericToken extends GBToken {
 					value_ = CONST_VALUES[i];
 					length_ = CONST_TOKENS[i][j].length();
 				}
-		if (type_ == GBTokenType.Undefined) {
-			int len = 0;
+		if (type_ == GBTokenType.Undefined && isNumeric(s.charAt(pos))) {
+			int len = 1;
 			while (pos + len < s.length() && isNumeric(s.charAt(pos + len)))
 				++len;
+			length_ = len;
 			try {
 				value_ = Double.parseDouble(s.substring(pos, pos + len));
 				type_ = GBTokenType.Numeric;
-				length_ = len;
 			}
 			catch (NumberFormatException e) {
-				throw new GBIncorrectNumericException(pos);
+				throw new GBIncorrectNumericException(this);
 			}
 		}
 	}

@@ -9,6 +9,7 @@ public class GBOperatorToken extends GBToken {
 //-------------------------------------------------------
 
 	public GBOperatorToken(String s, int pos) {
+		pos_ = pos;
 		type_ = GBTokenType.Operator;
 		switch (s.charAt(pos)) {
 		case '+':

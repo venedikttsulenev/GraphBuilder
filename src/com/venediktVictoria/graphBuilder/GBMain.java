@@ -10,6 +10,5 @@ public class GBMain implements Runnable {
 	}
 	public void run() {
 		GBMainFrame frame = new GBMainFrame(800, 600, "Graph Builder v " + VERSION);
-		
 	}
 }
