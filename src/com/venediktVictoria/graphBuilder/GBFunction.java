@@ -11,7 +11,7 @@ public class GBFunction {
 //--------------------------------------------------------------------------------
 	
 	public GBFunction(String s) throws GBUnknownTokenException, GBExtraCloseBracketException, GBExtraOpenBracketException,
-		GBIncorrectNumericException
+		GBIncorrectNumericException, GBMissingArgumentException
 	{
 		Vector<GBToken>infix = new Vector<GBToken>(s.length());
 		int pos = 0;
@@ -37,8 +37,36 @@ public class GBFunction {
 				infix.addElement(token);
 			}
 		}
-		//TODO check for missing arguments
+		//check for missing arguments
+		if (infix.firstElement().type() == GBTokenType.Operator)
+			throw new GBMissingArgumentException(infix.firstElement());
+		for (int i = 0; i < infix.size()-1; ++i) {
+			token = infix.elementAt(i);
+			switch (token.type()) {
+			case Function:
+			case Operator:
+			case OpenBracket:
+				switch (infix.elementAt(i+1).type()) {
+				case CloseBracket:
+				case Operator:
+					throw new GBMissingArgumentException(token);
+				default:
+					break;
+				}
+			default:
+				break;
+			}
+		}
+		switch (infix.lastElement().type()) {
+		case Operator:
+		case Function:
+			throw new GBMissingArgumentException(infix.lastElement());
+		default:
+			break;
+		}
 		//TODO check for missing operators
+		//...
+		
 		Stack<GBToken> opStack = new Stack<GBToken>();
 		postfix_ = new Vector<GBToken>(infix.size());
 		for (int i = 0; i < infix.size(); ++i) {  //Перевод в обратную польскую нотацию
@@ -71,6 +99,7 @@ public class GBFunction {
 				break;
 			}
 		}
+		infix.clear();
 		while (!opStack.empty()) {
 			token = opStack.pop();
 			if (token.type() == GBTokenType.OpenBracket)
