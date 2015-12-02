@@ -36,7 +36,7 @@ public class GBMainFrame extends JFrame {
 			errLabel_.setText(exc.getMessage()); //Вывод сообщения об ошибке
 			if (!textField_.hasFocus()) 		 //Выделить текстовое поле для исправления ошибки
 				textField_.grabFocus();
-			textField_.setCaretPosition(exc.token().pos()); //Перевести курсор textField_ в место ошибки
+			textField_.setCaretPosition(exc.token().pos() + exc.token().length()); //Перевести курсор textField_ в место ошибки
 		}
 		if (func != null) { //Функция задана корректно, проблем при чтении не возникло
 			/* Построение графика...

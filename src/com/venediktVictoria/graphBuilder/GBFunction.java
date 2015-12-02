@@ -11,7 +11,7 @@ public class GBFunction {
 //--------------------------------------------------------------------------------
 	
 	public GBFunction(String s) throws GBUnknownTokenException, GBExtraCloseBracketException, GBExtraOpenBracketException,
-		GBIncorrectNumericException, GBMissingArgumentException
+		GBIncorrectNumericException, GBMissingArgumentException, GBMissingOperatorException
 	{
 		Vector<GBToken>infix = new Vector<GBToken>(s.length());
 		int pos = 0;
@@ -38,8 +38,16 @@ public class GBFunction {
 			}
 		}
 		//check for missing arguments
-		if (infix.firstElement().type() == GBTokenType.Operator)
+		//check for missing operators
+		switch (infix.firstElement().type()) {
+		case Operator:
 			throw new GBMissingArgumentException(infix.firstElement());
+		case CloseBracket:
+			throw new GBMissingOperatorException(infix.firstElement());
+		default:
+			break;
+		}	
+		
 		for (int i = 0; i < infix.size()-1; ++i) {
 			token = infix.elementAt(i);
 			switch (token.type()) {
@@ -53,19 +61,33 @@ public class GBFunction {
 				default:
 					break;
 				}
+				break;
+			case Numeric:
+			case Variable:
+			case CloseBracket:
+				switch(infix.elementAt(i+1).type()) {
+				case Numeric:
+				case Variable:
+				case Function:
+				case OpenBracket:
+					throw new GBMissingOperatorException(token);
+				default:
+					break;
+				}
+				break;
 			default:
 				break;
 			}
 		}
+		
 		switch (infix.lastElement().type()) {
 		case Operator:
 		case Function:
+		case OpenBracket:
 			throw new GBMissingArgumentException(infix.lastElement());
 		default:
 			break;
 		}
-		//TODO check for missing operators
-		//...
 		
 		Stack<GBToken> opStack = new Stack<GBToken>();
 		postfix_ = new Vector<GBToken>(infix.size());
