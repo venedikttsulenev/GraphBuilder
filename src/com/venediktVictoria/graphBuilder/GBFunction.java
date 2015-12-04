@@ -6,12 +6,12 @@ import com.venediktVictoria.graphBuilder.exceptions.*;
 import com.venediktVictoria.graphBuilder.tokens.*;
 
 public class GBFunction {
-	private Vector<GBToken> postfix_;
+	private Vector<GBToken> postfix_;		//Хранит обратную польскую запись функции
 	
 //--------------------------------------------------------------------------------
 	
 	public GBFunction(String s) throws GBUnknownTokenException, GBExtraCloseBracketException, GBExtraOpenBracketException,
-		GBIncorrectNumericException, GBMissingArgumentException, GBMissingOperatorException
+		GBIncorrectNumericException, GBMissingArgumentException, GBMissingOperatorException, GBThereIsNothingToParseException
 	{
 		Vector<GBToken>infix = new Vector<GBToken>(s.length());
 		int pos = 0;
@@ -37,9 +37,11 @@ public class GBFunction {
 				infix.addElement(token);
 			}
 		}
-		//check for missing arguments
-		//check for missing operators
-		switch (infix.firstElement().type()) {
+		
+		if (infix.size() == 0) 					//Проверка, не пусто ли исходное выражение
+			throw new GBThereIsNothingToParseException();
+
+		switch (infix.firstElement().type()) { 	//Проверка на пропущенные аргументы/операторы
 		case Operator:
 			throw new GBMissingArgumentException(infix.firstElement());
 		case CloseBracket:
@@ -91,7 +93,7 @@ public class GBFunction {
 		
 		Stack<GBToken> opStack = new Stack<GBToken>();
 		postfix_ = new Vector<GBToken>(infix.size());
-		for (int i = 0; i < infix.size(); ++i) {  //Перевод в обратную польскую нотацию
+		for (int i = 0; i < infix.size(); ++i) {  		//Перевод в обратную польскую нотацию
 			token = infix.elementAt(i);
 			switch (token.type()) {
 			case Numeric:
@@ -122,7 +124,7 @@ public class GBFunction {
 			}
 		}
 		infix.clear();
-		while (!opStack.empty()) {
+		while (!opStack.empty()) { 
 			token = opStack.pop();
 			if (token.type() == GBTokenType.OpenBracket)
 				throw new GBExtraOpenBracketException(token);

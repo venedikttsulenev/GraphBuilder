@@ -4,6 +4,9 @@ import com.venediktVictoria.graphBuilder.tokens.GBToken;
 
 public class GBParseException extends Exception {
 	protected GBToken token_;
+	public GBParseException() {
+		token_ = null;
+	}
 	public GBParseException(GBToken token) {
 		token_ = token;
 	}
@@ -12,6 +15,6 @@ public class GBParseException extends Exception {
 	}
 	@Override
 	public String getMessage() {
-		return "Parse error at " + String.valueOf(token_.pos()) + ": ";
+		return "Parse error: " + ((token_ != null) ? (" at " + String.valueOf(token_.pos()+1) + ": ") : "");
 	}
 }

@@ -1,6 +1,5 @@
 package com.venediktVictoria.graphBuilder;
 
-import java.awt.Color;
 import java.awt.event.*;
 
 import javax.swing.JFrame;
@@ -11,7 +10,6 @@ import javax.swing.JLabel;
 import com.venediktVictoria.graphBuilder.exceptions.GBParseException;
 
 public class GBMainFrame extends JFrame {
-	//private GBFunction function_;
 	private JTextField textField_;
 	private JButton buttonBuild_;
 	private JLabel labelFX_;
@@ -25,18 +23,15 @@ public class GBMainFrame extends JFrame {
 	private void buildGraph() {
 		GBFunction func = null;
 		try {
-			if (textField_.getText().length() == 0) //В текстовом поле пусто
-				errLabel_.setText("There is no expression in text field");
-			else {
-				func = new GBFunction(textField_.getText()); //Парсим текстовое поле
-				errLabel_.setText("f(0) = " + String.valueOf(func.value(0)) + "     f(1) = " + String.valueOf(func.value(1))/* + "     f(" + String.valueOf(func.bisect(-1, 1, 0.00000001)) + ") = 0"*/);
-			}
+			func = new GBFunction(textField_.getText()); //Парсим текстовое поле
+			errLabel_.setText("f(0) = " + String.valueOf(func.value(0)) + "     f(1) = " + String.valueOf(func.value(1))/* + "     f(" + String.valueOf(func.bisect(-1, 1, 0.00000001)) + ") = 0"*/);
 		}
 		catch (GBParseException exc) {		
 			errLabel_.setText(exc.getMessage()); //Вывод сообщения об ошибке
 			if (!textField_.hasFocus()) 		 //Выделить текстовое поле для исправления ошибки
 				textField_.grabFocus();
-			textField_.setCaretPosition(exc.token().pos() + exc.token().length()); //Перевести курсор textField_ в место ошибки
+			if (exc.token() != null)
+				textField_.setCaretPosition(exc.token().pos() + exc.token().length()); //Перевести курсор textField_ в место ошибки
 		}
 		if (func != null) { //Функция задана корректно, проблем при чтении не возникло
 			/* Построение графика...
