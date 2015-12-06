@@ -2,7 +2,7 @@ package com.venediktVictoria.graphBuilder.exceptions;
 
 public class GBThereIsNothingToParseException extends GBParseException {
 	public GBThereIsNothingToParseException() {
-		super();
+		super(null);
 	}
 	@Override
 	public String getMessage() {

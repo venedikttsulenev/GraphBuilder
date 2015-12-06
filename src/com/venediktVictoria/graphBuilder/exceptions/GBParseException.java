@@ -4,9 +4,6 @@ import com.venediktVictoria.graphBuilder.tokens.GBToken;
 
 public class GBParseException extends Exception {
 	protected GBToken token_;
-	public GBParseException() {
-		token_ = null;
-	}
 	public GBParseException(GBToken token) {
 		token_ = token;
 	}
