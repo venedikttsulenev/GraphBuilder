@@ -16,7 +16,7 @@ public class GBFunction {
 		Vector<GBToken>infix = new Vector<GBToken>(s.length());
 		int pos = 0;
 		GBToken token;
-		while (pos < s.length()) { //Переводим строку в массив токенов
+		while (pos < s.length()) { 				//Translate string to an array of tokens
 			while (pos < s.length() && s.charAt(pos) == ' ')
 				++pos;
 			if (pos < s.length()) {
@@ -31,17 +31,19 @@ public class GBFunction {
 					token = new GBCloseBracketToken(s, pos);
 				if (token.type() == GBTokenType.Undefined)
 					token = new GBNumericToken(s, pos);
-				if (token.type() == GBTokenType.Undefined) //Unknown token
+				if (token.type() == GBTokenType.Undefined) { //Unknown token 
+					token = new GBUndefinedToken(s, pos);
 					throw new GBUnknownTokenException(token);
+				}
 				pos += token.length();
 				infix.addElement(token);
 			}
 		}
 		
-		if (infix.size() == 0) 					//Проверка, не пусто ли исходное выражение
+		if (infix.size() == 0) 					//Check if expression is empty
 			throw new GBThereIsNothingToParseException();
 
-		switch (infix.firstElement().type()) { 	//Проверка на пропущенные аргументы/операторы
+		switch (infix.firstElement().type()) { 	//Check if there are missing arguments/operators
 		case Operator:
 			throw new GBMissingArgumentException(infix.firstElement());
 		case CloseBracket:
@@ -93,7 +95,7 @@ public class GBFunction {
 		
 		Stack<GBToken> opStack = new Stack<GBToken>();
 		postfix_ = new Vector<GBToken>(infix.size());
-		for (int i = 0; i < infix.size(); ++i) {  		//Перевод в обратную польскую нотацию
+		for (int i = 0; i < infix.size(); ++i) {  		//Translate to reverse polish notation
 			token = infix.elementAt(i);
 			switch (token.type()) {
 			case Numeric:
@@ -132,8 +134,12 @@ public class GBFunction {
 				postfix_.addElement(token);
 		}
 	}
-	public double value(double x) {		//Вычисляет значение функции в точке
-		//TODO: add some checks and exceptions
+	public double value(double x) {		
+		/*
+		 * Returns value of function at point x
+		 * 
+		 * TODO: add some checks and exceptions
+		 */
 		Stack<Double> calc = new Stack<Double>();
 		GBToken token = null;
 		for (int i = 0; i < postfix_.size(); ++i) {
@@ -161,14 +167,15 @@ public class GBFunction {
 			}
 		}
 		return calc.pop();
-	}/*
-	public double bisect(double a, double b, double eps) {
+	}
+	private double bisect(double a, double b, double eps, int maxIter) {
+		int i = 0;
 		double va = value(a);
 		double vb = value(b);
 		double d = (a + b) / 2;
 		double vd = value(d);
 		if (va*vb < 0) {
-			while (Math.abs(vd) > eps) {
+			while (Math.abs(vd) > eps && i < maxIter) {
 				d = (a + b) / 2;
 				vd = value(d);
 				if (va * vd < 0) {
@@ -179,10 +186,45 @@ public class GBFunction {
 					a = d;
 					va = vd;
 				}
+				++i;
 			}
 		}
 		else
 			d = a - 1;
 		return d;
-	}*/
+	}
+	public boolean isSuspiciousForHavingVerticalAsymptoteIn(double a, double b) {
+		/*
+		 * Returns true if rate (Yb - Ya)/(b - a) is greater than 1 by absolute value
+		 */
+		final double SUSPICIOUS_RATE_KOEFF = 1;
+		boolean ans = false;
+		double va = value(a);
+		double vb = value(b);
+		if (Math.signum(va)*Math.signum(vb) > 0)
+			ans = false;
+		else 
+			ans = Math.abs((va - vb) / (a-b)) > SUSPICIOUS_RATE_KOEFF;
+		return ans;
+	}
+	public boolean hasVerticalAsymptoteIn(double a, double b) {
+		final int MAX_ITERATIONS = 500;
+		final double EPS = 0.0001;
+		boolean has = false;
+		double va = value(a);
+		double vb = value(b);
+		if (va*vb > 0)
+			return false;
+		try {
+			double d = bisect(a, b, EPS, MAX_ITERATIONS);
+			double vd = value(d);
+			if (Math.abs(vd) > EPS || !Double.isFinite(vd))
+				has = true;
+		}
+		catch(ArithmeticException e) {
+			has = true;
+		}
+		return has;
+	}
+	
 }

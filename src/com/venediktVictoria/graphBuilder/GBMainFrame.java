@@ -23,19 +23,19 @@ public class GBMainFrame extends JFrame {
 	private void buildGraph() {
 		GBFunction func = null;
 		try {
-			func = new GBFunction(textField_.getText()); //Парсим текстовое поле
+			func = new GBFunction(textField_.getText()); //Parse text field
 			errLabel_.setText("f(0) = " + String.valueOf(func.value(0)) + "     f(1) = " + String.valueOf(func.value(1))/* + "     f(" + String.valueOf(func.bisect(-1, 1, 0.00000001)) + ") = 0"*/);
 		}
 		catch (GBParseException exc) {		
-			errLabel_.setText(exc.getMessage()); //Вывод сообщения об ошибке
-			if (!textField_.hasFocus()) 		 //Выделить текстовое поле для исправления ошибки
+			errLabel_.setText(exc.getMessage()); //Output error message to label
+			if (!textField_.hasFocus()) 		 //Select text field for mistake correction
 				textField_.grabFocus();
 			if (exc.token() != null)
-				textField_.setCaretPosition(exc.token().pos() + exc.token().length()); //Перевести курсор textField_ в место ошибки
+				textField_.setCaretPosition(exc.token().pos() + exc.token().length()); //Move cursor in text field to position, where parse error occured
 		}
-		if (func != null) { //Функция задана корректно, проблем при чтении не возникло
-			/* Построение графика...
-			 * Чтобы узнать значение функции в точке x, использовать func.value(x) 
+		if (func != null) { //Expression given in text field is correct
+			/* Build graph...
+			 * Use func.value(x) to obtain function value at x
 			 * ...
 			 * */
 			
@@ -54,7 +54,7 @@ public class GBMainFrame extends JFrame {
 		textField_.addKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {
-				if (e.getKeyChar() == '\n') //Если нажали Enter, рисуем график
+				if (e.getKeyChar() == '\n') //Build graph if 'Enter' key pressed 
 					buildGraph();
 			}
 			@Override

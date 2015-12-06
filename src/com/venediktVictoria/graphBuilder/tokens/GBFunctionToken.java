@@ -2,15 +2,19 @@ package com.venediktVictoria.graphBuilder.tokens;
 
 public class GBFunctionToken extends GBToken {
 	private enum GBFunctionType {
-		exp, ln, sin, cos, tan, ctan //, ...
+		exp, ln, sin, cos, tan, tg, ctan, ctg, sqrt, cbrt //, ...
 	}
-	static final String FUNC_TOKENS[][] = {
+	private static final String FUNC_TOKENS[][] = {
 		{"exp", "Exp", "EXP"},
 		{"ln", "Ln", "LN"},
 		{"sin", "Sin", "SIN"},
 		{"cos", "Cos", "COS"},
-		{"tan", "Tan", "TAN", "tg", "Tg", "TG"},
-		{"ctan", "Ctan", "CTAN", "ctg", "Ctg", "CTG"}
+		{"tan", "Tan", "TAN"},
+		{"tg", "Tg", "TG"},
+		{"ctan", "Ctan", "CTAN"},
+		{"ctg", "Ctg", "CTG"},
+		{"sqrt", "Sqrt", "SQRT"},
+		{"cbrt", "Cbrt", "CBRT"}
 		//...
 	};
 	GBFunctionType functionType_;
@@ -39,9 +43,15 @@ public class GBFunctionToken extends GBToken {
 		case cos:
 			return Math.cos(x);
 		case tan:
+		case tg:
 			return Math.tan(x);
 		case ctan:
+		case ctg:
 			return Math.pow(Math.tan(x), -1);
+		case sqrt:
+			return Math.sqrt(x);
+		case cbrt:
+			return Math.cbrt(x);
 		//...
 		default:
 			return x;

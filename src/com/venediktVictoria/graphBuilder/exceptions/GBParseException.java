@@ -15,6 +15,6 @@ public class GBParseException extends Exception {
 	}
 	@Override
 	public String getMessage() {
-		return "Parse error: " + ((token_ != null) ? (" at " + String.valueOf(token_.pos()+1) + ": ") : "");
+		return "Parse error" + ((token_ != null) ? (" at " + String.valueOf(token_.pos()+1)) : "") + ": ";
 	}
 }
