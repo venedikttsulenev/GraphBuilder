@@ -12,11 +12,11 @@ public class GBMain implements Runnable {
 		GBMainFrame frame = new GBMainFrame(800, 600, "Graph Builder v " + VERSION);
 		/*
 		 * Just for debug
-		 * 
+		 *
 		GBFunction f = null;
 		try {
-			f = new GBFunction("1/cos x");
-			double a = Math.PI*0.5 -.01, b = Math.PI*0.5 + .01;
+			f = new GBFunction("cos x/tg x");
+			double a = -.001, b = .001;
 			boolean boo = f.isSuspiciousForHavingVerticalAsymptoteIn(a, b);
 			System.out.println(String.valueOf(boo));
 			if (boo)
@@ -25,6 +25,6 @@ public class GBMain implements Runnable {
 		catch (Exception e) {
 			System.out.println("Error((9");
 		}
-		 */
+		 */ 
 	}
 }

@@ -2,11 +2,12 @@ package com.venediktVictoria.graphBuilder.tokens;
 
 public class GBFunctionToken extends GBToken {
 	private enum GBFunctionType {
-		exp, ln, sin, cos, tan, tg, ctan, ctg, sqrt, cbrt //, ...
+		exp, ln, lg, sin, cos, tan, tg, ctan, ctg, sqrt, cbrt, sinh, cosh, tanh
 	}
 	private static final String FUNC_TOKENS[][] = {
 		{"exp", "Exp", "EXP"},
 		{"ln", "Ln", "LN"},
+		{"lg", "Lg", "LG"},
 		{"sin", "Sin", "SIN"},
 		{"cos", "Cos", "COS"},
 		{"tan", "Tan", "TAN"},
@@ -14,8 +15,10 @@ public class GBFunctionToken extends GBToken {
 		{"ctan", "Ctan", "CTAN"},
 		{"ctg", "Ctg", "CTG"},
 		{"sqrt", "Sqrt", "SQRT"},
-		{"cbrt", "Cbrt", "CBRT"}
-		//...
+		{"cbrt", "Cbrt", "CBRT"},
+		{"sinh", "Sinh", "SINH"},
+		{"cosh", "Cosh", "COSH"},
+		{"tanh", "Tanh", "TANH"}
 	};
 	GBFunctionType functionType_;
 	
@@ -38,6 +41,8 @@ public class GBFunctionToken extends GBToken {
 			return Math.exp(x);
 		case ln:
 			return Math.log(x);
+		case lg:
+			return Math.log10(x);
 		case sin:
 			return Math.sin(x);
 		case cos:
@@ -52,7 +57,12 @@ public class GBFunctionToken extends GBToken {
 			return Math.sqrt(x);
 		case cbrt:
 			return Math.cbrt(x);
-		//...
+		case sinh:
+			return Math.sinh(x);
+		case cosh:
+			return Math.cosh(x);
+		case tanh:
+			return Math.tanh(x);
 		default:
 			return x;
 		}

@@ -6,7 +6,7 @@ import com.venediktVictoria.graphBuilder.exceptions.*;
 import com.venediktVictoria.graphBuilder.tokens.*;
 
 public class GBFunction {
-	private Vector<GBToken> postfix_;		//Хранит обратную польскую запись функции
+	private Vector<GBToken> postfix_;		//Stores reverse polish notation of the function expression
 	
 //--------------------------------------------------------------------------------
 	
@@ -134,11 +134,12 @@ public class GBFunction {
 				postfix_.addElement(token);
 		}
 	}
+	
+	//--------------------------------------------------------------------------------
+		
 	public double value(double x) {		
 		/*
 		 * Returns value of function at point x
-		 * 
-		 * TODO: add some checks and exceptions
 		 */
 		Stack<Double> calc = new Stack<Double>();
 		GBToken token = null;
@@ -195,7 +196,7 @@ public class GBFunction {
 	}
 	public boolean isSuspiciousForHavingVerticalAsymptoteIn(double a, double b) {
 		/*
-		 * Returns true if rate (Yb - Ya)/(b - a) is greater than 1 by absolute value
+		 * Returns true if rate (Yb - Ya)/(b - a) is greater than SUSPICIOUS_RATE_KOEFF by absolute value
 		 */
 		final double SUSPICIOUS_RATE_KOEFF = 1;
 		boolean ans = false;
