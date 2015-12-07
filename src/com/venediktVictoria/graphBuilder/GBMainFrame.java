@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import com.venediktVictoria.graphBuilder.exceptions.GBParseException;
 
@@ -14,6 +15,7 @@ public class GBMainFrame extends JFrame {
 	private JButton buttonBuild_;
 	private JLabel labelFX_;
 	private JLabel errLabel_;
+	private JPanel controlPanel_;
 	
 	private void realignItems() {
 		textField_.setSize(getWidth() - 60, 26);
