@@ -235,7 +235,7 @@ public class GBFunction {
 		/*
 		 * Returns true if rate (Yb - Ya)/(b - a) is greater than SUSPICIOUS_RATE_KOEFF by absolute value
 		 */
-		final double SUSPICIOUS_RATE_KOEFF = 1;
+		final double SUSPICIOUS_RATE_KOEFF = 10;
 		boolean ans = false;
 		double va = value(a);
 		double vb = value(b);

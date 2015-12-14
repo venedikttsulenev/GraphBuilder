@@ -64,7 +64,6 @@ public class GBGraphPanel extends JPanel {
 					mouseDragging_ = false;
 					Point p = e.getPoint();
 					p.setLocation(p.getX(), getHeight() - p.y);
-					System.out.println(p);
 					Point2D.Double newMid = new Point2D.Double(mid_.x - diff_.x*(p.x - dragStart_.x)/(double)getWidth(), mid_.y - diff_.y*(p.y - dragStart_.y)/(double)getHeight());
 					setMid(newMid);
 					repaint();
@@ -76,17 +75,6 @@ public class GBGraphPanel extends JPanel {
 			public void mouseEntered(MouseEvent e) {}
 			@Override
 			public void mouseClicked(MouseEvent e) {}
-		});
-		addMouseMotionListener(new MouseMotionListener() {
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				
-			}
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				
-				
-			}
 		});
 	}
 	public void setGraphBounds(Double left, Double right) {
@@ -144,6 +132,7 @@ public class GBGraphPanel extends JPanel {
 //----------------------------------------	
 	@Override
 	public void paintComponent(Graphics g) {
+		final double pixelsPerStep = 0.1;
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(Color.black);
@@ -161,7 +150,7 @@ public class GBGraphPanel extends JPanel {
 		}
 		g2d.setStroke(new BasicStroke(1));
 		if (func_ != null) {
-			final double step = 2 * diff_.x / getWidth();
+			final double step = pixelsPerStep * diff_.x / getWidth();
 			g.setColor(Color.BLACK);
 			for (double d = leftGraphBound_; d < rightGraphBound_; d += step) {
 				if (!func_.isSuspiciousForHavingVerticalAsymptoteIn(d, d + step) && !func_.hasVerticalAsymptoteIn(d, d + step)) {
