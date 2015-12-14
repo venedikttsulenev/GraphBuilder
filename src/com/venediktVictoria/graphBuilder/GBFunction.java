@@ -13,7 +13,7 @@ public class GBFunction {
 	public GBFunction(String s) throws GBUnknownTokenException, GBExtraCloseBracketException, GBExtraOpenBracketException,
 		GBIncorrectNumericException, GBMissingArgumentException, GBMissingOperatorException, GBThereIsNothingToParseException
 	{
-		Vector<GBToken>infix = new Vector<GBToken>(s.length());
+		Vector<GBToken>infix = new Vector<GBToken>(2*s.length());
 		int pos = 0;
 		GBToken token;
 		while (pos < s.length()) { 				//Translate string to an array of tokens
@@ -23,17 +23,32 @@ public class GBFunction {
 				token = new GBFunctionToken(s, pos);
 				if (token.type() == GBTokenType.Undefined)
 					token = new GBOperatorToken(s, pos);
-				if (token.type() == GBTokenType.Undefined)
+				if (token.type() == GBTokenType.Undefined) {
 					token = new GBVariableToken(s, pos);
-				if (token.type() == GBTokenType.Undefined)
-					token = new GBOpenBracketToken(s, pos);
-				if (token.type() == GBTokenType.Undefined)
-					token = new GBCloseBracketToken(s, pos);
-				if (token.type() == GBTokenType.Undefined)
-					token = new GBNumericToken(s, pos);
-				if (token.type() == GBTokenType.Undefined) { //Unknown token 
-					token = new GBUndefinedToken(s, pos);
-					throw new GBUnknownTokenException(token);
+					if (token.type() == GBTokenType.Undefined)
+						token = new GBOpenBracketToken(s, pos);
+					if (token.type() == GBTokenType.Undefined)
+						token = new GBCloseBracketToken(s, pos);
+					if (token.type() == GBTokenType.Undefined)
+						token = new GBNumericToken(s, pos);
+					if (token.type() == GBTokenType.Undefined) { //Unknown token 
+						token = new GBUndefinedToken(s, pos);
+						throw new GBUnknownTokenException(token);
+					}
+				}
+				else if (token.type() == GBTokenType.Operator) {
+					if (!infix.isEmpty()) {
+						switch (infix.lastElement().type()) {
+						case Numeric:
+						case Variable:
+						case CloseBracket:
+							break;
+						default:
+							token = new GBUnaryOperatorToken((GBOperatorToken) token);
+						}
+					}
+					else
+						token = new GBUnaryOperatorToken((GBOperatorToken) token);
 				}
 				pos += token.length();
 				infix.addElement(token);
@@ -45,7 +60,15 @@ public class GBFunction {
 
 		switch (infix.firstElement().type()) { 	//Check if there are missing arguments/operators
 		case Operator:
-			throw new GBMissingArgumentException(infix.firstElement());
+			GBOperatorToken opToken = (GBOperatorToken) infix.firstElement();
+			switch (opToken.operatorType()) {
+			case Plus :
+			case Minus:
+				break;
+			default:
+				throw new GBMissingArgumentException(infix.firstElement());
+			}
+			break;
 		case CloseBracket:
 			throw new GBMissingOperatorException(infix.firstElement());
 		default:
@@ -60,8 +83,17 @@ public class GBFunction {
 			case OpenBracket:
 				switch (infix.elementAt(i+1).type()) {
 				case CloseBracket:
-				case Operator:
 					throw new GBMissingArgumentException(token);
+				case Operator:
+					GBOperatorToken opToken = (GBOperatorToken) infix.elementAt(i+1);
+					switch (opToken.operatorType()) {
+					case Plus:
+					case Minus:
+						break;
+					default:
+						throw new GBMissingArgumentException(token);
+					}
+					break;
 				default:
 					break;
 				}
@@ -107,6 +139,7 @@ public class GBFunction {
 					postfix_.addElement(opStack.pop());
 				opStack.push(token);
 				break;
+			case UnaryOperator:
 			case Function:
 			case OpenBracket:
 				opStack.push(token);
@@ -156,6 +189,10 @@ public class GBFunction {
 			case Function:
 				GBFunctionToken funcToken = (GBFunctionToken)token;
 				calc.push(Double.valueOf(funcToken.value(calc.pop().doubleValue())));
+				break;
+			case UnaryOperator:
+				GBUnaryOperatorToken unOpToken = (GBUnaryOperatorToken)token;
+				calc.push(Double.valueOf(unOpToken.value(calc.pop().doubleValue())));
 				break;
 			case Operator:
 				GBOperatorToken opToken = (GBOperatorToken)token;
@@ -212,7 +249,7 @@ public class GBFunction {
 		final int MAX_ITERATIONS = 500;
 		final double EPS = 0.0001;
 		boolean has = false;
-		double va = value(a);
+		double va = value(a);	
 		double vb = value(b);
 		if (va*vb > 0)
 			return false;

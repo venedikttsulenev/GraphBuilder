@@ -19,8 +19,7 @@ public class GBNumericToken extends GBToken {
 		return (c >= '0' && c <= '9') || c == '.';
 	}
 	public GBNumericToken(String s, int pos) throws GBIncorrectNumericException {
-		pos_ = pos;
-		type_ = GBTokenType.Undefined;
+		super(pos, GBTokenType.Undefined);
 		for (int i = 0; i < CONST_TOKENS.length && type_ == GBTokenType.Undefined; ++i)
 			for (int j = 0; j < CONST_TOKENS[i].length && type_ == GBTokenType.Undefined; ++j) 
 				if (pos + CONST_TOKENS[i][j].length() <= s.length() && CONST_TOKENS[i][j].equals(s.substring(pos, pos + CONST_TOKENS[i][j].length()))) {
@@ -43,15 +42,18 @@ public class GBNumericToken extends GBToken {
 		}
 	}
 	public GBNumericToken(double v) {
-		type_ = GBTokenType.Numeric;
+		super(0, GBTokenType.Numeric);
 		value_ = v;
+		length_ = String.valueOf(v).length();
 	}
 	public double value() {
 		return value_;
 	}
+	@Override
 	public int length() {
 		return length_;
 	}
+	@Override
 	public int priority() {
 		return 0;
 	}

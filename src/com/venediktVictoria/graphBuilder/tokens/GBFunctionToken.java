@@ -25,8 +25,7 @@ public class GBFunctionToken extends GBToken {
 //-------------------------------------------------------
 	
 	public GBFunctionToken(String s, int pos) {
-		pos_ = pos;
-		type_ = GBTokenType.Undefined;
+		super(pos, GBTokenType.Undefined);
 		for (int i = 0; i < FUNC_TOKENS.length && type_ == GBTokenType.Undefined; ++i)
 			for (int j = 0; j < FUNC_TOKENS[i].length && type_ == GBTokenType.Undefined; ++j)  {
 				if (pos + FUNC_TOKENS[i][j].length() <= s.length() && FUNC_TOKENS[i][j].equals(s.substring(pos, pos + FUNC_TOKENS[i][j].length()))) {
@@ -67,9 +66,11 @@ public class GBFunctionToken extends GBToken {
 			return x;
 		}
 	}
+	@Override
 	public int length() {
 		return FUNC_TOKENS[functionType_.ordinal()][0].length();
 	}
+	@Override
 	public int priority() {
 		return 1;
 	}

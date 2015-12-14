@@ -1,7 +1,7 @@
 package com.venediktVictoria.graphBuilder.tokens;
 
 public class GBOperatorToken extends GBToken {
-	private enum GBOperatorType {
+	public enum GBOperatorType {
 		Plus, Minus, Multiply, Divide, Power
 	} 
 	GBOperatorType operatorType_;
@@ -9,8 +9,7 @@ public class GBOperatorToken extends GBToken {
 //-------------------------------------------------------
 
 	public GBOperatorToken(String s, int pos) {
-		pos_ = pos;
-		type_ = GBTokenType.Operator;
+		super(pos, GBTokenType.Operator);
 		switch (s.charAt(pos)) {
 		case '+':
 			operatorType_ = GBOperatorType.Plus;
@@ -32,6 +31,9 @@ public class GBOperatorToken extends GBToken {
 			break;	
 		}
 	}
+	public GBOperatorType operatorType() {
+		return operatorType_;
+	}
 	public double value(double x, double y) {
 		switch (operatorType_) {
 		case Plus:
@@ -48,9 +50,11 @@ public class GBOperatorToken extends GBToken {
 			return 0;
 		}
 	}
+	@Override
 	public int length() {
 		return 1;
 	}
+	@Override
 	public int priority() {
 		switch (operatorType_) {
 		case Plus:
