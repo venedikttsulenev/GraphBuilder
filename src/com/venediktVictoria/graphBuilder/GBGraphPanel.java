@@ -8,12 +8,16 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.awt.Cursor;
 
 import javax.swing.JPanel;
 
 //import com.sun.javafx.cursor.*;
+
+
 
 import sun.security.util.SecurityConstants.AWT;
 
@@ -76,6 +80,16 @@ public class GBGraphPanel extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {}
 		});
+		addMouseWheelListener(new MouseWheelListener() {
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				int clicks = e.getWheelRotation();
+				final double clickZoom = 1.25;
+				double finalZoom = Math.pow(clickZoom, clicks);
+				setGraphBounds(mid_.x - diff_.x*finalZoom*0.5, mid_.x + diff_.x*finalZoom*0.5);
+				repaint();
+			}
+		});
 	}
 	public void setGraphBounds(Double left, Double right) {
 		if (left == null && right == null) {
@@ -91,7 +105,7 @@ public class GBGraphPanel extends JPanel {
 		else {
 			leftGraphBound_ = Math.min(left.doubleValue(), right.doubleValue());
 			rightGraphBound_ = Math.max(left.doubleValue(), right.doubleValue());
-			mid_.x = (leftGraphBound_ + rightGraphBound_) / 2;
+			//mid_.x = (leftGraphBound_ + rightGraphBound_) / 2;
 			diff_.x = rightGraphBound_ - leftGraphBound_;
 			if (diff_.x > MAX_GRAPH_BOUNDS_DIFF || diff_.x < MIN_GRAPH_BOUNDS_DIFF) {
 				double scale = (diff_.x > MAX_GRAPH_BOUNDS_DIFF) ? MAX_GRAPH_BOUNDS_DIFF / diff_.x : MIN_GRAPH_BOUNDS_DIFF / diff_.x;
@@ -100,7 +114,6 @@ public class GBGraphPanel extends JPanel {
 				diff_.x = rightGraphBound_ - leftGraphBound_; //for correct calculation of bottom and top bounds
 			}
 		}
-		mid_.y = 0;
 		diff_.y = diff_.x*getHeight() / getWidth();
 		bottomGraphBound_ = mid_.y - diff_.y/2;
 		topGraphBound_ = mid_.y + diff_.y/2;
@@ -112,6 +125,9 @@ public class GBGraphPanel extends JPanel {
 		rightGraphBound_ = leftGraphBound_ + diff_.x;
 		bottomGraphBound_ = mid_.y - diff_.y/2;
 		topGraphBound_ = bottomGraphBound_ + diff_.y;
+	}
+	public void zoom(double times) {
+		//TODO
 	}
 	public void setFunction(GBFunction func) { 
 		func_ = func;
