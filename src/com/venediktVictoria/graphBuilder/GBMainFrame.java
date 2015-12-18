@@ -144,6 +144,7 @@ public class GBMainFrame extends JFrame {
 			@Override
 			public void componentResized(ComponentEvent e) {
 				realignItems();
+				graphPanel_.setGraphBounds(graphPanel_.getLeftGraphBound(), graphPanel_.getRightGraphBound());
 			}
 			@Override
 			public void componentMoved(ComponentEvent e) {}

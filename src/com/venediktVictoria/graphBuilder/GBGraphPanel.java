@@ -34,6 +34,7 @@ public class GBGraphPanel extends JPanel {
 	private Point2D.Double diff_;
 	private boolean mouseDragging_;
 	private Point dragStart_;
+	private Point2D.Double dragStartMid_;
 	/*
 	private Point2D.Double pixToCoords(Point p) {
 		return new Point2D.Double(mid_.x + 0.001*(p.x - getWidth()/2)*diff_.x/getWidth(), mid_.y + 0.001*(p.y - getHeight()/2)*diff_.y/getHeight());
@@ -53,14 +54,14 @@ public class GBGraphPanel extends JPanel {
 		topGraphBound_ = mid_.y + diff_.y/2;
 		mouseDragging_ = false;
 		dragStart_ = new Point(0, 0);
-		setCursor(new Cursor(Cursor.HAND_CURSOR));
+		//setCursor(new Cursor(Cursor.HAND_CURSOR));
 		addMouseListener(new MouseListener() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				mouseDragging_ = true;
 				dragStart_.x = e.getX();
 				dragStart_.y = getHeight() - e.getY();
-				
+				dragStartMid_ = (Point2D.Double) mid_.clone();
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -68,7 +69,10 @@ public class GBGraphPanel extends JPanel {
 					mouseDragging_ = false;
 					Point p = e.getPoint();
 					p.setLocation(p.getX(), getHeight() - p.y);
-					Point2D.Double newMid = new Point2D.Double(mid_.x - diff_.x*(p.x - dragStart_.x)/(double)getWidth(), mid_.y - diff_.y*(p.y - dragStart_.y)/(double)getHeight());
+					Point2D.Double newMid = new Point2D.Double(
+							dragStartMid_.x - diff_.x*(p.x - dragStart_.x)/(double)getWidth(),
+							dragStartMid_.y - diff_.y*(p.y - dragStart_.y)/(double)getHeight()
+							);
 					setMid(newMid);
 					repaint();
 				}
@@ -80,13 +84,32 @@ public class GBGraphPanel extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent e) {}
 		});
+		addMouseMotionListener(new MouseMotionListener() {
+			@Override
+			public void mouseMoved(MouseEvent e) {}
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				if (mouseDragging_ == true) {
+					//mouseDragging_ = false;
+					Point p = e.getPoint();
+					p.setLocation(p.getX(), getHeight() - p.y);
+					Point2D.Double newMid = new Point2D.Double(
+							dragStartMid_.x - diff_.x*(p.x - dragStart_.x)/(double)getWidth(),
+							dragStartMid_.y - diff_.y*(p.y - dragStart_.y)/(double)getHeight()
+							);
+					setMid(newMid);
+					repaint();
+				}
+			}
+		});
 		addMouseWheelListener(new MouseWheelListener() {
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				int clicks = e.getWheelRotation();
 				final double clickZoom = 1.25;
 				double finalZoom = Math.pow(clickZoom, clicks);
-				setGraphBounds(mid_.x - diff_.x*finalZoom*0.5, mid_.x + diff_.x*finalZoom*0.5);
+				zoomGraph(finalZoom);
+				//setGraphBounds(mid_.x - diff_.x*finalZoom*0.5, mid_.x + diff_.x*finalZoom*0.5);
 				repaint();
 			}
 		});
@@ -101,6 +124,11 @@ public class GBGraphPanel extends JPanel {
 			leftGraphBound_ = left.doubleValue() - 5;
 			rightGraphBound_ = left.doubleValue() + 5;
 			mid_.x = left.doubleValue();
+		}
+		else if (left == null) {
+			leftGraphBound_ = right.doubleValue() - 5;
+			rightGraphBound_ = right.doubleValue() + 5;
+			mid_.x = right.doubleValue();
 		}
 		else {
 			leftGraphBound_ = Math.min(left.doubleValue(), right.doubleValue());
@@ -126,11 +154,21 @@ public class GBGraphPanel extends JPanel {
 		bottomGraphBound_ = mid_.y - diff_.y/2;
 		topGraphBound_ = bottomGraphBound_ + diff_.y;
 	}
-	public void zoom(double times) {
+	public void zoomGraph(double times) {
+		diff_.x *= times;
+		diff_.y *= times;
+		leftGraphBound_ = mid_.x - diff_.x/2;
+		rightGraphBound_ = mid_.x + diff_.x/2;
+		bottomGraphBound_ = mid_.y - diff_.y/2;
+		topGraphBound_ = mid_.y + diff_.y/2;
+	}
+	public void dragGraph() {
 		//TODO
 	}
 	public void setFunction(GBFunction func) { 
 		func_ = func;
+		mid_.x = 0;
+		mid_.y = 0;
 	}
 //----------------------------------------	
 	public double getLeftGraphBound() {
